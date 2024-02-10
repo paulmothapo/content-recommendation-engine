@@ -7,6 +7,7 @@ app = Flask(__name__)
 
 content_data = pd.read_csv('data/content_data.csv')
 
+
 def preprocess_data(data):
     return data
 
