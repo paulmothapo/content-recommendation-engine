@@ -6,7 +6,7 @@ from data.process_data import preprocess_text
 from multiprocessing import Pool
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
-# update the Flask application to support batch processing and asynchronous request handling
+
 app = Flask(__name__)
 
 sc = SparkContext("local", "ContentRecommendation")
