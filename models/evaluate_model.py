@@ -1,6 +1,15 @@
-from sklearn.metrics import accuracy_score
+from pyspark.sql import SparkSession
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 
-def evaluate_model(model, X_test, y_test):
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
+def evaluate_model(model, data):
+    spark = SparkSession.builder \
+        .appName("ModelEvaluation") \
+        .getOrCreate()
+
+    spark_df = spark.createDataFrame(data)
+    evaluator = MulticlassClassificationEvaluator(labelCol="target", predictionCol="prediction", metricName="accuracy")
+    accuracy = evaluator.evaluate(model.transform(spark_df))
+    
+    spark.stop()
+    
     return accuracy
