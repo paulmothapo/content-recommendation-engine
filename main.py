@@ -2,6 +2,9 @@ from flask import Flask, request, jsonify
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
+from data.process_data import preprocess_text
+
+
 
 app = Flask(__name__)
 
@@ -9,15 +12,16 @@ content_data = pd.read_csv('data/content_data.csv')
 
 
 def preprocess_data(data):
-    return data
+    return preprocess_text(data)  
+
 
 def get_recommendations(query, num_recommendations=5):
-    query = preprocess_data([query])
+    query = preprocess_data(query)  
 
     tfidf_vectorizer = TfidfVectorizer()
     tfidf_matrix = tfidf_vectorizer.fit_transform(content_data['content'])
 
-    cosine_similarities = linear_kernel(tfidf_matrix, tfidf_vectorizer.transform(query))
+    cosine_similarities = linear_kernel(tfidf_matrix, tfidf_vectorizer.transform([query]))
     top_indices = cosine_similarities.argsort().flatten()[-num_recommendations:][::-1]
     recommendations = content_data.iloc[top_indices]
 
